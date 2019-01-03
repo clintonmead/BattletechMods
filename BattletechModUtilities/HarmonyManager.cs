@@ -1,4 +1,6 @@
-﻿using Harmony;
+﻿using BattleTech;
+using ClintonMead;
+using Harmony;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,29 +12,30 @@ namespace BattletechModUtilities
     {
         public readonly TSettings Settings;
         public readonly bool DebugOn;
+        public readonly string HarmonyUniqId;
+
+        private HarmonyInstance HarmonyInstance
+        {
+            get { return HarmonyManager.HarmonyInstance; }
+        }
 
         public HarmonyManager(Assembly assembly, string settingsJSON, string harmonyUniqId = null, bool debugDefault = true)
         {
             try
             {
+                HarmonyUniqId = harmonyUniqId ?? assembly.FullName;
                 Settings = JsonConvert.DeserializeObject<TSettings>(settingsJSON);
 
                 IDebug iDebug = Settings as IDebug;
                 DebugOn = iDebug == null || iDebug.DebugOn;
 
-                if (harmonyUniqId == null)
-                {
-                    harmonyUniqId = assembly.FullName;
-                }
-
-                DebugLog("Attempting patch for Battletech mod " + harmonyUniqId);
-                HarmonyInstance harmony = HarmonyInstance.Create(harmonyUniqId);
-                harmony.PatchAll(assembly);
-                DebugLog("Successfully patched mod " + harmonyUniqId);
+                DebugLog("Attempting patch for Battletech mod");
+                HarmonyInstance.PatchAll(assembly);
+                DebugLog("Successfully patched");
                 if (DebugOn)
                 {
                     Log("List of patched methods: ");
-                    IEnumerable<MethodBase> methods = harmony.GetPatchedMethods();
+                    IEnumerable<MethodBase> methods = HarmonyInstance.GetPatchedMethods();
                     foreach (MethodBase method in methods)
                     {
                         Log(method.Name);
@@ -42,12 +45,12 @@ namespace BattletechModUtilities
             }
             catch (Exception e)
             {
-                Log("Battletech mod " + harmonyUniqId + " threw exception during initialisation:");
+                Log("Battletech mod threw exception during initialisation:");
                 Log(e.ToString());
                 throw;
             }
-
         }
+
         public void DebugLog(string s)
         {
             if (DebugOn)
@@ -57,7 +60,43 @@ namespace BattletechModUtilities
         }
         public void Log(string s)
         {
-            FileLog.Log(DateTime.Now + ": " + s);
+            FileLog.Log(HarmonyUniqId + " - " + DateTime.Now + ": " + s);
+        }
+
+        public void LogExceptions(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                Log(e.ToString());
+            }
+        }
+
+        public bool LogExceptions(Func<bool> func)
+        {
+            try
+            {
+                return func();
+            }
+            catch (Exception e)
+            {
+                Log(e.ToString());
+                return true;
+            }
+        }
+    }
+
+    public static class HarmonyManager
+    {
+        public static readonly HarmonyInstance HarmonyInstance;
+
+        static HarmonyManager()
+        {
+            HarmonyInstance = HarmonyInstance.Create("BattletechModUtilitiesHarmonyInstance");
+            HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
         }
     }
 }
