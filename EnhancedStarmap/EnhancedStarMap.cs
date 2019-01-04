@@ -118,15 +118,6 @@ namespace EnhancedStarMap
             {
                 return HarmonyManager.LogExceptions(() =>
                 {
-                    if (Input.GetKeyUp(KeyCode.F1))
-                    {
-                        CurrentMapType = MapType.None;
-                    }
-                    else if (Input.GetKeyUp(KeyCode.F1))
-                    {
-                        CurrentMapType = MapType.Difficulty;
-                    }
-
                     bool flag = __instance.starmap.CanTravelToNode(node, false);
                     RGBColor<float> color = new RGBColor<float>(1,1,1);
 
@@ -180,11 +171,11 @@ namespace EnhancedStarMap
             }
         }
 
-        [HarmonyPatch(typeof(StarmapRenderer))]
+        [HarmonyPatch(typeof(SGNavigationScreen))]
         [HarmonyPatch("Update")]
         public static class PatchStarmapRendererUpdate
         {
-            public static void Postfix(StarmapRenderer __instance)
+            public static void Postfix(SGNavigationScreen __instance)
             {
                 HarmonyManager.LogExceptions(() =>
                 {
@@ -205,7 +196,8 @@ namespace EnhancedStarMap
                     if (newMapType.HasValue && newMapType.Value != CurrentMapType)
                     {
                         CurrentMapType = newMapType.Value;
-                        __instance.RefreshSystems();
+                        __instance.GetSimGameState().Starmap.Screen.RefreshSystems();
+                        __instance.RefreshSystemIndicators();
                     }
                 });
             }

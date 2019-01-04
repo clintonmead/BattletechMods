@@ -1,4 +1,5 @@
 ﻿using BattleTech;
+using BattleTech.UI;
 using ClintonMead;
 using System.Collections.Generic;
 
@@ -14,6 +15,16 @@ namespace BattletechModUtilities
         public static SimGameState GetSimGameState(this StarmapRenderer starmapRenderer)
         {
             return starmapRenderer.starmap.GetSimGameState();
+        }
+
+        public static SimGameState GetSimGameState(this SGNavigationScreen sgNavigationScreen)
+        {
+            return sgNavigationScreen.GetFieldValue<SimGameState>("simState");
+        }
+
+        public static void RefreshSystemIndicators(this SGNavigationScreen sgNavigationScreen)
+        {
+            sgNavigationScreen.InvokeMethod("RefreshSystemIndicators");
         }
 
         public static List<string> GetVisitedStarSystems(this SimGameState simGameState)
