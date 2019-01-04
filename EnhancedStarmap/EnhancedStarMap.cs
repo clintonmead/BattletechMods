@@ -119,7 +119,7 @@ namespace EnhancedStarMap
                 return HarmonyManager.LogExceptions(() =>
                 {
                     bool flag = __instance.starmap.CanTravelToNode(node, false);
-                    RGBColor<float> color = new RGBColor<float>(1,1,1);
+                    RGBColor<float> color = new RGBColor<float>(1, 1, 1);
 
                     VisitedColors visitedColors = HarmonyManager.Settings.VisitedColors;
 
@@ -131,8 +131,8 @@ namespace EnhancedStarMap
                             color = GetDifficultyColor(__instance, node);
                             break;
                         case MapType.Visited:
-                            color = __instance.starmap.HasStarSystemBeenVisited(node) 
-                                        ? visitedColors.VisitedColor 
+                            color = __instance.starmap.HasStarSystemBeenVisited(node)
+                                        ? visitedColors.VisitedColor
                                         : visitedColors.NotVisitedColor;
                             break;
                         default:
@@ -200,6 +200,18 @@ namespace EnhancedStarMap
                         __instance.RefreshSystemIndicators();
                     }
                 });
+            }
+        }
+
+        [HarmonyPatch(typeof(SGNavigationScreen))]
+        [HarmonyPatch("ShowSpecialSystems")]
+        public static class PatchStarmapRendererShowSpecialSystems
+        {
+            public static bool Prefix()
+            {
+                // If we're displaying an overlay, don't show special systems e.g. black markets
+                // as this will hide it.
+                return CurrentMapType == MapType.None;
             }
         }
     }
