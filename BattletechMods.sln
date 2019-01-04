@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BattletechModUtilities", "B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnhancedStarMap", "EnhancedStarmap\EnhancedStarMap.csproj", "{82BEFCBD-D9CB-4E5C-966C-18B66874F7DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContractTime", "ContractTime\ContractTime.csproj", "{38208E30-FC6F-4DA4-B643-B864870BB5CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{82BEFCBD-D9CB-4E5C-966C-18B66874F7DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82BEFCBD-D9CB-4E5C-966C-18B66874F7DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82BEFCBD-D9CB-4E5C-966C-18B66874F7DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38208E30-FC6F-4DA4-B643-B864870BB5CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38208E30-FC6F-4DA4-B643-B864870BB5CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38208E30-FC6F-4DA4-B643-B864870BB5CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38208E30-FC6F-4DA4-B643-B864870BB5CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

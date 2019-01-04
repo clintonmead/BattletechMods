@@ -19,12 +19,8 @@ namespace ClintonMead
             }
         }
 
-        public static void InvokeMethod(this object obj, string methodName, object[] parameters = null)
+        public static void InvokeMethod(this object obj, string methodName, params object[] parameters)
         {
-            if (parameters == null)
-            {
-                parameters = new object[] { };
-            }
             BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
 
             MethodInfo dynMethod = obj.GetType().GetMethod(methodName, bindingFlags);

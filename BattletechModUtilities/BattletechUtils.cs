@@ -22,6 +22,11 @@ namespace BattletechModUtilities
             return sgNavigationScreen.GetFieldValue<SimGameState>("simState");
         }
 
+        public static void OnDayPassed(this SimGameState simGameState, int timelapse)
+        {
+            simGameState.InvokeMethod("OnDayPassed", timelapse);
+        }
+
         public static void RefreshSystemIndicators(this SGNavigationScreen sgNavigationScreen)
         {
             sgNavigationScreen.InvokeMethod("RefreshSystemIndicators");
