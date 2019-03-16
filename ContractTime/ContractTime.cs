@@ -10,13 +10,11 @@ namespace ContractTime
 {
     public static class ContractTime
     {
-        private static HarmonyManager<Settings> HarmonyManager;
-
-        private static int _catchUpDays = 0;
+        private static HarmonyManager<Settings> _harmonyManager;
 
         public static void Init(string directory, string settingsJSON)
         {
-            HarmonyManager = new HarmonyManager<Settings>(
+            _harmonyManager = new HarmonyManager<Settings>(
                 assembly: Assembly.GetExecutingAssembly(),
                 settingsJSON: settingsJSON,
                 harmonyUniqId: "io.github.clintonmead.ContractTime");
@@ -54,10 +52,10 @@ namespace ContractTime
         {
             public static void Postfix(SimGameState __instance)
             {
-                HarmonyManager.LogExceptions(() =>
+                _harmonyManager.LogExceptions(() =>
                 {
-                    int daysToSkip = HarmonyManager.Settings.ContractDays;
-                    HarmonyManager.DebugLog("Contract finished, skipping " + daysToSkip + "day(s)");
+                    int daysToSkip = _harmonyManager.Settings.ContractDays;
+                    _harmonyManager.DebugLog("Contract finished, skipping " + daysToSkip + "day(s)");
                     if (daysToSkip > 0)
                     {
                         __instance.OnDayPassed(daysToSkip);
@@ -65,6 +63,5 @@ namespace ContractTime
                 });
             }
         }
-
     }
 }
