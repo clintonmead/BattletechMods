@@ -51,5 +51,20 @@ namespace BattletechModUtilities
         {
             return starmap.HasStarSystemBeenVisited(node.System.ID);
         }
+
+        public static int GetSystemMaxContracts(this StarSystem starSystem)
+        {
+            return (int) starSystem.InvokeMethod("GetSystemMaxContracts");
+        }
+
+        public static void SetLastRefreshDay(this StarSystem starSystem, int lastRefreshDay)
+        {
+            starSystem.SetFieldValue("LastRefreshDay", lastRefreshDay);
+        }
+
+        public static void SetCurMaxContracts(this StarSystem starSystem, float curMaxContracts)
+        {
+            starSystem.SetFieldValue("CurMaxContracts", curMaxContracts);
+        }
     }
 }

@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnhancedStarMap", "Enhanced
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContractTime", "ContractTime\ContractTime.csproj", "{38208E30-FC6F-4DA4-B643-B864870BB5CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixContractRefreshRate", "FixContractRefreshRate\FixContractRefreshRate.csproj", "{CB10DF41-1D74-435F-B33B-C8147E3D4666}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixRepShopAdjustment", "FixRepShopAdjustment\FixRepShopAdjustment.csproj", "{6D95A5A4-354D-41FE-99BC-50B48C9153E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +40,14 @@ Global
 		{38208E30-FC6F-4DA4-B643-B864870BB5CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38208E30-FC6F-4DA4-B643-B864870BB5CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38208E30-FC6F-4DA4-B643-B864870BB5CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB10DF41-1D74-435F-B33B-C8147E3D4666}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB10DF41-1D74-435F-B33B-C8147E3D4666}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB10DF41-1D74-435F-B33B-C8147E3D4666}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB10DF41-1D74-435F-B33B-C8147E3D4666}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D95A5A4-354D-41FE-99BC-50B48C9153E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D95A5A4-354D-41FE-99BC-50B48C9153E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D95A5A4-354D-41FE-99BC-50B48C9153E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D95A5A4-354D-41FE-99BC-50B48C9153E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,12 +19,27 @@ namespace ClintonMead
             }
         }
 
-        public static void InvokeMethod(this object obj, string methodName, params object[] parameters)
+        public static void SetFieldValue<T>(this object obj, string name, T newValue)
+        {
+            // Set the flags so that private and public fields from instances will be found
+            BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
+            FieldInfo field = obj.GetType().GetField(name, bindingFlags);
+            if (field != null)
+            {
+                field.SetValue(obj, newValue);
+            }
+            else
+            {
+                throw new Exception("Unable to find field: " + name);
+            }
+        }
+
+        public static object InvokeMethod(this object obj, string methodName, params object[] parameters)
         {
             BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Instance;
 
             MethodInfo dynMethod = obj.GetType().GetMethod(methodName, bindingFlags);
-            dynMethod.Invoke(obj, parameters);
+            return dynMethod.Invoke(obj, parameters);
         }
     }
 }

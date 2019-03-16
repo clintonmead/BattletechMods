@@ -2,9 +2,11 @@
 using ClintonMead;
 using Harmony;
 using Newtonsoft.Json;
+using Optional;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Optional.Unsafe;
 
 namespace BattletechModUtilities
 {
@@ -63,6 +65,11 @@ namespace BattletechModUtilities
             FileLog.Log(HarmonyUniqId + " - " + DateTime.Now + ": " + s);
         }
 
+        public void Log(Exception e)
+        {
+            FileLog.Log(e.ToString());
+        }
+
         public void LogExceptions(Action action)
         {
             try
@@ -71,7 +78,7 @@ namespace BattletechModUtilities
             }
             catch (Exception e)
             {
-                Log(e.ToString());
+                Log(e);
             }
         }
 
@@ -83,7 +90,31 @@ namespace BattletechModUtilities
             }
             catch (Exception e)
             {
-                Log(e.ToString());
+                Log(e);
+                return true;
+            }
+        }
+
+        public bool PrefixPatchAndReturn<T>(ref T result, Func<Option<T>> func)
+        {
+            try
+            {
+                Option<T> funcResult = func();
+                if (funcResult.HasValue)
+                {
+                    // If we get a value, immediately return it.
+                    result = funcResult.ValueOrDefault();
+                    return false;
+                }
+                else
+                {
+                    // Otherwise call the original function.
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Log(e);
                 return true;
             }
         }
