@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace ClintonMead
+namespace BattletechModUtilities
 {
     public static class ReflectionUtils
     {

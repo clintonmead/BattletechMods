@@ -1,7 +1,6 @@
 ﻿using BattleTech;
 using BattleTech.UI;
 using BattletechModUtilities;
-using ClintonMead;
 using Harmony;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -24,7 +23,7 @@ namespace EnhancedStarMap
                 "io.github.clintonmead.EnhancedStarMap");
         }
 
-        private enum MapType { None, Difficulty, Visited };
+        private enum MapType { None, Difficulty, Visited, MaxContracts };
 
         private static MapType CurrentMapType = MapType.None;
 
@@ -116,7 +115,7 @@ namespace EnhancedStarMap
                 StarSystemNode node,
                 StarmapSystemRenderer renderer)
             {
-                return HarmonyManager.LogExceptions(() =>
+                return HarmonyManager.PrefixLogExceptions(() =>
                 {
                     bool flag = __instance.starmap.CanTravelToNode(node, false);
                     RGBColor<float> color = new RGBColor<float>(1, 1, 1);
@@ -134,6 +133,9 @@ namespace EnhancedStarMap
                             color = __instance.starmap.HasStarSystemBeenVisited(node)
                                         ? visitedColors.VisitedColor
                                         : visitedColors.NotVisitedColor;
+                            break;
+                        case MapType.MaxContracts:
+                            color = GetDifficultyColor((int) node.System.CurMaxContracts);
                             break;
                         default:
                             throw new InvalidEnumArgumentException("'CurrentMapType' has invalid value. This should never happen. Please report this as a bug.");
@@ -191,6 +193,10 @@ namespace EnhancedStarMap
                     else if (Input.GetKeyUp(KeyCode.F3))
                     {
                         newMapType = MapType.Visited;
+                    }
+                    else if (Input.GetKeyUp(KeyCode.F4))
+                    {
+                        newMapType = MapType.MaxContracts;
                     }
 
                     if (newMapType.HasValue && newMapType.Value != CurrentMapType)

@@ -50,26 +50,21 @@ namespace FixContractRefreshRate
         {
             public static bool Prefix(StarSystem __instance)
             {
-                try
+                return HarmonyManager.PrefixLogExceptions(() =>
                 {
                     int num = __instance.Sim.DaysPassed - __instance.LastRefreshDay;
                     if (num >= __instance.Sim.Constants.Story.DefaultContractRefreshRate)
                     {
                         __instance.SetLastRefreshDay(__instance.Sim.DaysPassed);
-                        if (__instance.CurMaxContracts < __instance.GetSystemMaxContracts() && !__instance.Def.Depletable)
+                        if (__instance.CurMaxContracts < __instance.GetSystemMaxContracts() &&
+                            !__instance.Def.Depletable)
                         {
                             __instance.SetCurMaxContracts(Mathf.Min(__instance.GetSystemMaxContracts(),
-                                __instance.CurMaxContracts + __instance.Sim.Constants.Story.ContractRenewalPerWeek * num / 7));
+                                __instance.CurMaxContracts +
+                                __instance.Sim.Constants.Story.ContractRenewalPerWeek * num / 7));
                         }
                     }
-
-                    return false;
-                }
-                catch (Exception e)
-                {
-                    HarmonyManager.Log(e);
-                    return true;
-                }
+                });
             }
         }
     }

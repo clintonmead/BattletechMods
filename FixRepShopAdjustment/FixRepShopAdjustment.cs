@@ -31,7 +31,7 @@ namespace FixRepShopAdjustment
             public readonly bool Debug;
 
             [JsonConstructor]
-            public Settings(int contractDays, bool debug)
+            public Settings(bool debug)
             {
                 Debug = debug;
             }
@@ -51,7 +51,7 @@ namespace FixRepShopAdjustment
         {
             public static bool Prefix(SimGameState __instance, SimGameReputation rep, ref float __result)
             {
-                return _harmonyManager.PrefixPatchAndReturn(ref __result, () =>
+                return _harmonyManager.PrefixPatchOptionally(ref __result, () =>
                 {
                     if (rep == SimGameReputation.LOATHED)
                     {

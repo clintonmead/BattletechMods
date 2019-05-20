@@ -1,13 +1,13 @@
-﻿using BattletechModUtilities;
-using System.Reflection;
-using Newtonsoft.Json;
+﻿using System;
 using System.ComponentModel;
-using Harmony;
+using System.Reflection;
+using BattletechModUtilities;
 using BattleTech;
+using Harmony;
+using Newtonsoft.Json;
 using UnityEngine;
-using System;
 
-namespace AlwaysDetected
+namespace AlwaysDetect
 {
     public static class AlwaysDetect
     {
@@ -22,19 +22,14 @@ namespace AlwaysDetected
         }
     }
 
-    public class AlwaysDetectSettings : IDebug
+    public class AlwaysDetectSettings : DefaultSettings
     {
-        [DefaultValue(float.PositiveInfinity)]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
-        public readonly float MaxAIDetectionDistance;
-        [DefaultValue(0)]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
-        public readonly float MaxHumanDetectionDistance;
-        [DefaultValue(true)]
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
-        public readonly bool Debug;
+        private AlwaysDetectSettings()
+        {
+        }
 
-        public bool DebugOn => Debug;
+        public readonly float MaxAIDetectionDistance = float.PositiveInfinity;
+        public readonly float MaxHumanDetectionDistance = 0;
     }
 
     [HarmonyPatch(typeof(LineOfSight))]

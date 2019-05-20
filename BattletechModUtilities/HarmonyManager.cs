@@ -1,5 +1,4 @@
 ﻿using BattleTech;
-using ClintonMead;
 using Harmony;
 using Newtonsoft.Json;
 using Optional;
@@ -21,7 +20,7 @@ namespace BattletechModUtilities
             get { return HarmonyManager.HarmonyInstance; }
         }
 
-        public HarmonyManager(Assembly assembly, string settingsJSON, string harmonyUniqId = null, bool debugDefault = true)
+        public HarmonyManager(Assembly assembly, string settingsJSON, string harmonyUniqId = null, bool debugDefault = true, bool explicitPatching = false)
         {
             try
             {
@@ -31,9 +30,16 @@ namespace BattletechModUtilities
                 IDebug iDebug = Settings as IDebug;
                 DebugOn = iDebug == null || iDebug.DebugOn;
 
-                DebugLog("Attempting patch for Battletech mod");
-                HarmonyInstance.PatchAll(assembly);
-                DebugLog("Successfully patched");
+                if (! explicitPatching)
+                {
+                    DebugLog("Attempting patch for Battletech mod");
+                    HarmonyInstance.PatchAll(assembly);
+                    DebugLog("Successfully patched");
+                }
+                else
+                {
+                    DebugLog("No automatic patching");
+                }
                 if (DebugOn)
                 {
                     Log("List of patched methods: ");
@@ -53,6 +59,11 @@ namespace BattletechModUtilities
             }
         }
 
+        public void Patch(MethodInfo method, MethodInfo prefix = null, MethodInfo postfix = null)
+        {
+            HarmonyInstance.Patch(method, prefix.MapNull(x => new HarmonyMethod(x)), postfix.MapNull(x => new HarmonyMethod(x)));
+        }
+
         public void DebugLog(string s)
         {
             if (DebugOn)
@@ -67,22 +78,29 @@ namespace BattletechModUtilities
 
         public void Log(Exception e)
         {
-            FileLog.Log(e.ToString());
+            Log("\nMessage: " + e.Message + "\nSource: " + e.Source + "\nStacktrace:\n" + e.StackTrace);
         }
 
         public void LogExceptions(Action action)
         {
+            PrefixLogExceptions(action);
+        }
+
+        public bool PrefixLogExceptions(Action action)
+        {
             try
             {
                 action();
+                return false;
             }
             catch (Exception e)
             {
                 Log(e);
+                return true;
             }
         }
 
-        public bool LogExceptions(Func<bool> func)
+        public bool PrefixLogExceptions(Func<bool> func)
         {
             try
             {
@@ -95,7 +113,7 @@ namespace BattletechModUtilities
             }
         }
 
-        public bool PrefixPatchAndReturn<T>(ref T result, Func<Option<T>> func)
+        public bool PrefixPatchOptionally<T>(ref T result, Func<Option<T>> func)
         {
             try
             {
@@ -118,16 +136,38 @@ namespace BattletechModUtilities
                 return true;
             }
         }
+
+        public bool PrefixPatch<T>(ref T result, Func<T> func)
+        {
+            return PrefixPatchOptionally(ref result, () => func().Some());
+        }
+
+        public void PostfixPatch<T>(ref T result, Func<T, T> func)
+        {
+            try
+            {
+                result = func(result);
+            }
+            catch (Exception e)
+            {
+                Log(e);
+            }
+        }
     }
 
     public static class HarmonyManager
     {
         public static readonly HarmonyInstance HarmonyInstance;
 
+        // Modtek just needs and Init to call by default on startup,
+        // but the static constructor does the work here anyway.
+        public static void Init(string directory, string settingsJSON)
+        {
+        }
+
         static HarmonyManager()
         {
             HarmonyInstance = HarmonyInstance.Create("BattletechModUtilitiesHarmonyInstance");
-            HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
         }
     }
 }

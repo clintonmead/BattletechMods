@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ClintonMead
+namespace BattletechModUtilities
 {
     public static class MathUtils
     {
